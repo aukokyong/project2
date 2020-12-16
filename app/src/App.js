@@ -1,16 +1,14 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState } from "react";
+import React, { isValidElement, useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "./Components/header";
 import Home from "./Components/home";
 import About from "./Components/about";
+import Destination from "./Components/2-destinations";
 import Selectbus from "./Components/1-selectBus";
-import Startstop from "./Components/2-startStop";
-import Endstop from "./Components/3-endStop";
-import Busarrival from "./Components/4-busArrival";
-import Setdistance from "./Components/5-setDistance";
-import Distanceleft from "./Components/6-distanceLeft";
-import Arrived from "./Components/7-arrived";
+import Busarrival from "./Components/3-busArrival";
+import Distance from "./Components/4-Distance";
+import Arrived from "./Components/6-arrived";
 import axios from "axios";
 
 const App = () => {
@@ -44,7 +42,11 @@ const App = () => {
   const [busstopcode, setbusstopcode] = useState([]);
   const [startdestination, setstartdestination] = useState("");
   const [enddestination, setenddestination] = useState("");
-  const [busarrival, setbusarrival] = useState([]);
+  const [busarrivalinfo, setbusarrivalinfo] = useState([]);
+  const [alertdistance, setalertdistance] = useState(1);
+  const [currentposcoord, setcurrentposcoord] = useState([]);
+  const [endstopcoord, setendstopcoord] = useState([]);
+  const [distancetoend, setdistancetoend] = useState();
 
   const handleChangeBusNumInput = (e) => {
     setstartdestination("");
@@ -105,13 +107,25 @@ const App = () => {
   const handleChangeEnd = (e) => {
     console.log("Selected: " + e.target.value);
     setenddestination(e.target.value);
+    databusstop.map((info) => {
+      if (info.BusStopCode === e.target.value) {
+        return setendstopcoord({
+          Latitude: info.Latitude,
+          Longitude: info.Longitude,
+        });
+      }
+    });
   };
   console.log("enddestination: " + enddestination);
+  console.log("END BUSSTOP COORDINATE:");
+  console.log(endstopcoord);
 
-  const handleBtn = () => {
-    console.log("Start");
+  const handleFetchBusArrivalInfo = (e) => {
+    console.log("Start", e);
     if (isselectvalid && startdestination !== "") {
-      axiosCall();
+      // axiosCall();
+      axiosCallTemporary();
+      console.log(busarrivalinfo);
     }
   };
 
@@ -128,9 +142,49 @@ const App = () => {
     axios
       .get(queryUrl, config)
       .then((response) => {
-        setbusarrival(response.data.Services);
+        setbusarrivalinfo(response.data.Services);
       })
       .catch((err) => console.log(err));
+  };
+
+  const axiosCallTemporary = () => {
+    let baseUrl = "../database/busArrival.txt";
+    axios
+      .get(baseUrl)
+      .then((response) => {
+        console.log(response.data.data.Services[0]);
+        setbusarrivalinfo(response.data.data.Services[0]);
+      })
+      .catch((err) => console.log(err));
+  };
+  // console.log(busarrivalinfo);
+
+  const updateAlertDistance = (dist) => {
+    console.log("CLICKED");
+    setalertdistance(dist);
+  };
+
+  const successCallback = (pos) => {
+    setcurrentposcoord({
+      Latitude: pos.coords.latitude,
+      Longitude: pos.coords.longitude,
+    });
+  };
+  const errorCallback = (error) => {
+    console.log(error);
+  };
+  // setInterval(() => {
+  //   navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+  // }, 30000);
+  navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+  console.log("CURRENT POSITION COORDINATE:");
+  console.log(currentposcoord);
+
+  const calculateDistance = () => {
+    let latBus = endstopcoord.Latitude;
+    let longBus = endstopcoord.Longitude;
+    let latPos = currentposcoord.Latitude;
+    let longPos = currentposcoord.Longitude;
   };
 
   return (
@@ -141,6 +195,7 @@ const App = () => {
           <Route path="/" exact>
             <Home />
           </Route>
+
           <Route path="/selectbus">
             <Selectbus
               handleChangeBusNumInput={handleChangeBusNumInput}
@@ -148,33 +203,31 @@ const App = () => {
               busstopcode={busstopcode}
             />
           </Route>
-          <Route path="/startstop">
-            <Startstop
+
+          <Route path="/destination">
+            <Destination
               startdestination={startdestination}
               handleChangeStart={handleChangeStart}
               busstopcode={busstopcode}
               databusstop={databusstop}
               isselectvalid={isselectvalid}
-            />
-          </Route>
-          <Route path="/endstop">
-            <Endstop
               enddestination={enddestination}
               handleChangeEnd={handleChangeEnd}
-              busstopcode={busstopcode}
-              databusstop={databusstop}
-              isselectvalid={isselectvalid}
+              handleFetchBusArrivalInfo={handleFetchBusArrivalInfo}
             />
           </Route>
+
           <Route path="/busarrival">
-            <Busarrival />
+            <Busarrival busarrivalinfo={busarrivalinfo} />
           </Route>
-          <Route path="/setdistance">
-            <Setdistance />
+
+          <Route path="/distance">
+            <Distance
+              updateAlertDistance={updateAlertDistance}
+              alertdistance={alertdistance}
+            />
           </Route>
-          <Route path="/distanceleft">
-            <Distanceleft />
-          </Route>
+
           <Route path="/arrived">
             <Arrived />
           </Route>

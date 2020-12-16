@@ -40,14 +40,10 @@ const Header = () => {
               selectbus
             </NavLink>
           </li>
+
           <li className="nav-item">
-            <NavLink className="nav-link" to="/startstop">
-              startstop
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/endstop">
-              endstop
+            <NavLink className="nav-link" to="/destination">
+              destination
             </NavLink>
           </li>
           <li className="nav-item">
@@ -56,13 +52,8 @@ const Header = () => {
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" to="/setdistance">
-              setdistance
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/distanceleft">
-              distanceleft
+            <NavLink className="nav-link" to="/distance">
+              distance
             </NavLink>
           </li>
           <li className="nav-item">
