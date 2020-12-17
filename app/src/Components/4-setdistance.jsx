@@ -9,25 +9,49 @@ const Distance = (props) => {
   };
 
   return (
-    <div className="container" style={{ border: "1px black solid" }}>
+    <div className="container mt-5">
       <div className="row justify-content-center">
-        <div className="col-6" style={{ border: "1px red solid" }}>
-          <h2>Set distance to alert</h2>
-          <p>Set distance to alert</p>
-          <input type="number" onChange={updateinput} />
-          km
+        <div className="col-6 text-center">
+          <h1>Alerting Distance</h1>
           <br />
-          <button
-            onClick={(e) => {
-              props.updateAlertDistance(input);
-            }}
-          >
-            <Link to="/alert">Set</Link>
-          </button>
+          <h4>Current alerting distance</h4>
+          <h3>{props.alertdistance} km</h3>
+
+          <br />
+
+          <div className="input-group mb-3">
+            <input
+              type="number"
+              className="form-control"
+              placeholder="Enter a number to change alerting distance"
+              onChange={updateinput}
+            />
+
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={(e) => {
+                props.updateAlertDistance(input);
+              }}
+            >
+              Update
+            </button>
+          </div>
         </div>
       </div>
 
       <br />
+      <br />
+
+      <div className="row justify-content-center">
+        <div className="col-6 text-center d-flex justify-content-around">
+          <Link to="/alert">
+            <button type="button" className="btn btn-danger">
+              Start Alert
+            </button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

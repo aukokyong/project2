@@ -3,12 +3,19 @@ import { NavLink } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap";
 
-const Header = () => {
+const Header = (props) => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <NavLink className="navbar-brand" to="/">
-        Logo Here
+    <nav className="navbar navbar-expand-lg navbar-dark bg-danger">
+      <NavLink
+        className="navbar-brand"
+        to="/"
+        onClick={() => {
+          props.clickhomereset();
+        }}
+      >
+        Next Stop
       </NavLink>
+
       <button
         className="navbar-toggler"
         type="button"
@@ -24,7 +31,13 @@ const Header = () => {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item active">
-            <NavLink className="nav-link" to="/">
+            <NavLink
+              className="nav-link"
+              to="/"
+              onClick={() => {
+                props.clickhomereset();
+              }}
+            >
               Home <span className="sr-only">(current)</span>
             </NavLink>
           </li>
@@ -35,9 +48,9 @@ const Header = () => {
             </NavLink>
           </li>
 
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/selectbus">
-              selectbus
+          {/* <li className="nav-item">
+            <NavLink className="nav-link" to="/bus">
+              bus
             </NavLink>
           </li>
 
@@ -46,7 +59,7 @@ const Header = () => {
               destination
             </NavLink>
           </li>
-          <li className="nav-item">
+          <li className="nav-item ">
             <NavLink className="nav-link" to="/busarrival">
               busarrival
             </NavLink>
@@ -60,12 +73,7 @@ const Header = () => {
             <NavLink className="nav-link" to="/alert">
               Alert
             </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/arrived">
-              arrived
-            </NavLink>
-          </li>
+          </li> */}
         </ul>
       </div>
     </nav>

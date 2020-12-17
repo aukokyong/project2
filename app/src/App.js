@@ -78,7 +78,7 @@ const App = () => {
 
   const [selectbus, setselectbus] = useState("");
   // const [bussuggestion, setbussuggestion] = useState([]);
-  const [isselectvalid, setisselectvalid] = useState(false);
+  const [isinputvalid, setisinputvalid] = useState(false);
   const [busstopcode, setbusstopcode] = useState([]);
   const [startdestination, setstartdestination] = useState("");
   const [enddestination, setenddestination] = useState("");
@@ -100,10 +100,10 @@ const App = () => {
     // Loop through bus services, break loop if true
     for (let i = 0; i < databusservice.length; i++) {
       if (databusservice[i].ServiceNo === e.target.value) {
-        setisselectvalid(true);
+        setisinputvalid(true);
         break;
       } else {
-        setisselectvalid(false);
+        setisinputvalid(false);
       }
     }
     setselectbus(e.target.value);
@@ -165,7 +165,7 @@ const App = () => {
   //
   const handleFetchBusArrivalInfo = (e) => {
     // console.log("Start", e);
-    if (isselectvalid && startdestination !== "" && enddestination !== "") {
+    if (isinputvalid && startdestination !== "" && enddestination !== "") {
       // axiosCall();
       axiosCallTemporary();
     }
@@ -207,59 +207,73 @@ const App = () => {
     setalertdistance(dist);
   };
 
-  // const alertFn = () => {
-  //   if (alertuser) {
-  //     alert("You are reaching your destination.");
-  //     setalertuser(false);
-  //   }
-  // };
+  const clickhomereset = () => {
+    setisinputvalid(false);
+  };
 
   return (
     <Router>
-      <Header />
+      <Header clickhomereset={clickhomereset} />
       <div>
         <Switch>
           <Route path="/" exact>
             <Home />
           </Route>
 
-          <Route path="/selectbus">
+          <Route path="/bus">
             <Selectbus
               handleChangeBusNumInput={handleChangeBusNumInput}
               selectbus={selectbus}
               busstopcode={busstopcode}
+              isinputvalid={isinputvalid}
             />
           </Route>
 
           <Route path="/destination">
-            <Destination
-              startdestination={startdestination}
-              handleChangeStart={handleChangeStart}
-              busstopcode={busstopcode}
-              databusstop={databusstop}
-              isselectvalid={isselectvalid}
-              enddestination={enddestination}
-              handleChangeEnd={handleChangeEnd}
-              handleFetchBusArrivalInfo={handleFetchBusArrivalInfo}
-            />
+            {isinputvalid ? (
+              <Destination
+                startdestination={startdestination}
+                handleChangeStart={handleChangeStart}
+                busstopcode={busstopcode}
+                databusstop={databusstop}
+                isselectvalid={isinputvalid}
+                enddestination={enddestination}
+                handleChangeEnd={handleChangeEnd}
+                handleFetchBusArrivalInfo={handleFetchBusArrivalInfo}
+              />
+            ) : (
+              <p></p>
+            )}
           </Route>
 
           <Route path="/busarrival">
-            <Busarrival busarrivalinfo={busarrivalinfo} />
+            {isinputvalid ? (
+              <Busarrival busarrivalinfo={busarrivalinfo} />
+            ) : (
+              <p></p>
+            )}
           </Route>
 
           <Route path="/setdistance">
-            <Setdistance
-              updateAlertDistance={updateAlertDistance}
-              alertdistance={alertdistance}
-            />
+            {isinputvalid ? (
+              <Setdistance
+                updateAlertDistance={updateAlertDistance}
+                alertdistance={alertdistance}
+              />
+            ) : (
+              <p></p>
+            )}
           </Route>
           <Route path="/alert">
-            <Alert
-              //
-              alertdistance={alertdistance}
-              endstopcoord={endstopcoord}
-            />
+            {isinputvalid ? (
+              <Alert
+                alertdistance={alertdistance}
+                endstopcoord={endstopcoord}
+                clickhomereset={clickhomereset}
+              />
+            ) : (
+              <p></p>
+            )}
           </Route>
 
           <Route path="/about">

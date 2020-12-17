@@ -15,6 +15,9 @@ const Busarrival = (props) => {
   let crowd1 = props.busarrivalinfo[0].NextBus.Load;
   let crowd2 = props.busarrivalinfo[0].NextBus2.Load;
   let crowd3 = props.busarrivalinfo[0].NextBus3.Load;
+  let feature1 = props.busarrivalinfo[0].NextBus.Feature;
+  let feature2 = props.busarrivalinfo[0].NextBus2.Feature;
+  let feature3 = props.busarrivalinfo[0].NextBus3.Feature;
 
   const nextBus = (nextbus) => {
     let now = moment();
@@ -25,59 +28,93 @@ const Busarrival = (props) => {
 
   const crowd = (code) => {
     if (code === "SEA") {
-      return "Seats Available";
+      return <p>Seats Available</p>;
     } else if (code === "SDA") {
-      return "Standing Available";
+      return <p>Standing Available</p>;
     } else if (code === "LSD") {
-      return "Limited Standing";
+      return <p>Limited Standing</p>;
     } else {
-      return "No Info";
+      return <p>No Info</p>;
+    }
+  };
+
+  const feature = (code) => {
+    if (code === "WAB") {
+      return <p>Wheel-chair Accessible</p>;
+    } else {
+      return <p>None</p>;
     }
   };
 
   return (
-    <div className="container" style={{ border: "1px black solid" }}>
+    <div className="container mt-5">
       <div className="row justify-content-center">
-        <div className="col-6" style={{ border: "1px red solid" }}>
-          <h1>Bus Arrival</h1>
-
-          <h4>Bus: {props.busarrivalinfo[0].ServiceNo}</h4>
-          <p>Bus Operator: {props.busarrivalinfo[0].Operator}</p>
-          <p>Last update: {now}</p>
-          <button onClick={(e) => timenow(e)}>Refresh</button>
+        <div className="col-6 text-center">
+          <h1>Bus Arrival Time</h1>
         </div>
       </div>
 
+      <br />
+
+      <div className="row justify-content-center text-center">
+        <div className="col-6">
+          <h4>Bus: {props.busarrivalinfo[0].ServiceNo}</h4>
+          <p>Bus Operator: {props.busarrivalinfo[0].Operator}</p>
+          <p>Last update: {now}</p>
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={(e) => timenow(e)}
+          >
+            Check for update
+          </button>
+        </div>
+      </div>
+
+      <br />
+      <br />
+
       <div className="row justify-content-center">
-        <div className="col-6" style={{ border: "1px red solid" }}>
+        <div className="col-6">
           <div className="row">
-            <div className="col" style={{ border: "1px blue solid" }}>
-              <p>Next Bus</p>
+            <div className="col" style={{ border: "1px black solid" }}>
+              <p>Next Bus Info</p>
               {nextBus(bus1)}
-              <p>{crowd(crowd1)}</p>
+              {crowd(crowd1)}
+              {feature(feature1)}
             </div>
-            <div className="col" style={{ border: "1px blue solid" }}>
-              <p>Next Bus</p>
+            <div className="col" style={{ border: "1px black solid" }}>
+              <p>Next Bus Info</p>
               {nextBus(bus2)}
-              <p>{crowd(crowd2)}</p>
+              {crowd(crowd2)}
+              {feature(feature2)}
             </div>
-            <div className="col" style={{ border: "1px blue solid" }}>
-              <p>Next Bus</p>
+            <div className="col" style={{ border: "1px black solid" }}>
+              <p>Next Bus Info</p>
               {nextBus(bus3)}
-              <p>{crowd(crowd3)}</p>
+              {crowd(crowd3)}
+              {feature(feature3)}
             </div>
           </div>
         </div>
       </div>
 
+      <br />
+      <br />
+
       <div className="row justify-content-center">
-        <div className="col-6" style={{ border: "1px red solid" }}>
-          <button>
-            <Link to="/destination">Back</Link>
-          </button>
-          <button>
-            <Link to="/setdistance">Next</Link>
-          </button>
+        <div className="col-6 text-center d-flex justify-content-around">
+          <Link to="/destination">
+            <button type="button" className="btn btn-danger">
+              Back
+            </button>
+          </Link>
+
+          <Link to="/setdistance">
+            <button type="button" className="btn btn-danger">
+              I am on the bus!
+            </button>
+          </Link>
         </div>
       </div>
     </div>

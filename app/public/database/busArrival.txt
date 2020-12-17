@@ -12,7 +12,7 @@
         "NextBus": {
           "OriginCode": "77009",
           "DestinationCode": "52009",
-          "EstimatedArrival": "2020-12-16T10:10:27+08:00",
+          "EstimatedArrival": "2020-12-18T10:10:27+08:00",
           "Latitude": "1.3555396666666666",
           "Longitude": "103.84651483333333",
           "VisitNumber": "1",
@@ -23,7 +23,7 @@
         "NextBus2": {
           "OriginCode": "77009",
           "DestinationCode": "52009",
-          "EstimatedArrival": "2020-12-16T10:18:52+08:00",
+          "EstimatedArrival": "2020-12-18T10:18:52+08:00",
           "Latitude": "1.3688576666666668",
           "Longitude": "103.84642766666667",
           "VisitNumber": "1",
@@ -34,7 +34,7 @@
         "NextBus3": {
           "OriginCode": "77009",
           "DestinationCode": "52009",
-          "EstimatedArrival": "2020-12-16T10:24:58+08:00",
+          "EstimatedArrival": "2020-12-18T10:24:58+08:00",
           "Latitude": "1.3693383333333333",
           "Longitude": "103.85682483333333",
           "VisitNumber": "1",
