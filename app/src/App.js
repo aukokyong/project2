@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { isValidElement, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "./Components/header";
 import Home from "./Components/home";
@@ -7,8 +7,8 @@ import About from "./Components/about";
 import Destination from "./Components/2-destinations";
 import Selectbus from "./Components/1-selectBus";
 import Busarrival from "./Components/3-busArrival";
-import Distance from "./Components/4-Distance";
-import Arrived from "./Components/6-arrived";
+import Setdistance from "./Components/4-setdistance";
+import Alert from "./Components/5-alert";
 import axios from "axios";
 
 const App = () => {
@@ -32,21 +32,60 @@ const App = () => {
     loadFile(busStopFilePath, "Stop", datasetbusstop);
   }, []);
 
+  let template = [
+    {
+      ServiceNo: "88",
+      Operator: "SBST",
+      NextBus: {
+        OriginCode: "77009",
+        DestinationCode: "52009",
+        EstimatedArrival: "2020-12-18T10:10:27+08:00",
+        Latitude: "1.3555396666666666",
+        Longitude: "103.84651483333333",
+        VisitNumber: "1",
+        Load: "SEA",
+        Feature: "WAB",
+        Type: "DD",
+      },
+      NextBus2: {
+        OriginCode: "77009",
+        DestinationCode: "52009",
+        EstimatedArrival: "2020-12-18T10:18:52+08:00",
+        Latitude: "1.3688576666666668",
+        Longitude: "103.84642766666667",
+        VisitNumber: "1",
+        Load: "SEA",
+        Feature: "WAB",
+        Type: "DD",
+      },
+      NextBus3: {
+        OriginCode: "77009",
+        DestinationCode: "52009",
+        EstimatedArrival: "2020-12-18T10:24:58+08:00",
+        Latitude: "1.3693383333333333",
+        Longitude: "103.85682483333333",
+        VisitNumber: "1",
+        Load: "SEA",
+        Feature: "WAB",
+        Type: "DD",
+      },
+    },
+  ];
+
   const [databusroute, setdatabusroute] = useState([]);
   const [databusservice, datasetbusservice] = useState([]);
   const [databusstop, datasetbusstop] = useState([]);
 
   const [selectbus, setselectbus] = useState("");
-  const [bussuggestion, setbussuggestion] = useState([]);
+  // const [bussuggestion, setbussuggestion] = useState([]);
   const [isselectvalid, setisselectvalid] = useState(false);
   const [busstopcode, setbusstopcode] = useState([]);
   const [startdestination, setstartdestination] = useState("");
   const [enddestination, setenddestination] = useState("");
-  const [busarrivalinfo, setbusarrivalinfo] = useState([]);
+  const [busarrivalinfo, setbusarrivalinfo] = useState(template);
   const [alertdistance, setalertdistance] = useState(1);
-  const [currentposcoord, setcurrentposcoord] = useState([]);
   const [endstopcoord, setendstopcoord] = useState([]);
-  const [distancetoend, setdistancetoend] = useState();
+  // const [alertuser, setalertuser] = useState(false);
 
   const handleChangeBusNumInput = (e) => {
     setstartdestination("");
@@ -54,7 +93,7 @@ const App = () => {
 
     checkIfUserInputValid(e);
     listBusStopSequence(e);
-    listBusSuggestion(e);
+    // listBusSuggestion(e);
   };
 
   const checkIfUserInputValid = (e) => {
@@ -70,6 +109,7 @@ const App = () => {
     setselectbus(e.target.value);
   };
   // console.log(selectbus);
+  // console.log(busstopcode);
 
   const listBusStopSequence = (e) => {
     let busstopCodeArr = [];
@@ -81,111 +121,98 @@ const App = () => {
     });
     setbusstopcode(busstopCodeArr);
   };
-  // console.log(busstopcode);
 
-  const listBusSuggestion = (e) => {
-    let suggestion = new Set();
-    databusservice.map((bus) => {
-      setbussuggestion([]);
-      let checkChar = bus.ServiceNo.slice(0, e.target.value.length);
-      if (checkChar === e.target.value && e.target.value.length > 0) {
-        suggestion.add(bus.ServiceNo);
-      }
-      return null;
-    });
-    suggestion = [...suggestion]; // convert set to array
-    setbussuggestion(suggestion);
-  };
+  // const listBusSuggestion = (e) => {
+  //   let suggestion = new Set();
+  //   databusservice.map((bus) => {
+  //     setbussuggestion([]);
+  //     let checkChar = bus.ServiceNo.slice(0, e.target.value.length);
+  //     if (checkChar === e.target.value && e.target.value.length > 0) {
+  //       suggestion.add(bus.ServiceNo);
+  //     }
+  //     return null;
+  //   });
+  //   suggestion = [...suggestion]; // convert set to array
+  //   setbussuggestion(suggestion);
+  // };
   // console.log(bussuggestion);
 
   const handleChangeStart = (e) => {
     console.log("Selected: " + e.target.value);
     setstartdestination(e.target.value);
   };
-  console.log("startdestination: " + startdestination);
+  // console.log("startdestination: " + startdestination);
 
   const handleChangeEnd = (e) => {
     console.log("Selected: " + e.target.value);
-    setenddestination(e.target.value);
-    databusstop.map((info) => {
-      if (info.BusStopCode === e.target.value) {
-        return setendstopcoord({
-          Latitude: info.Latitude,
-          Longitude: info.Longitude,
+    for (let i = 0; i < databusstop.length; i++) {
+      if (databusstop[i].BusStopCode === e.target.value) {
+        setendstopcoord({
+          Latitude: databusstop[i].Latitude,
+          Longitude: databusstop[i].Longitude,
         });
+        break;
       }
-    });
+    }
+    setenddestination(e.target.value);
   };
-  console.log("enddestination: " + enddestination);
-  console.log("END BUSSTOP COORDINATE:");
-  console.log(endstopcoord);
+  // console.log("enddestination: " + enddestination);
 
+  //
+  //
+  //
+  //
+  //
   const handleFetchBusArrivalInfo = (e) => {
-    console.log("Start", e);
-    if (isselectvalid && startdestination !== "") {
+    // console.log("Start", e);
+    if (isselectvalid && startdestination !== "" && enddestination !== "") {
       // axiosCall();
       axiosCallTemporary();
-      console.log(busarrivalinfo);
     }
   };
 
-  const axiosCall = () => {
-    let baseUrl =
-      "http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2";
-    let queryUrl = `${baseUrl}?BusStopCode=${startdestination}&ServiceNo=${selectbus}`;
-    const config = {
-      headers: {
-        AccountKey: process.env.REACT_APP_API_KEY,
-        accept: "application/json",
-      },
-    };
-    axios
-      .get(queryUrl, config)
-      .then((response) => {
-        setbusarrivalinfo(response.data.Services);
-      })
-      .catch((err) => console.log(err));
-  };
+  // const axiosCall = () => {
+  // let baseUrl =
+  //   "http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2";
+  // let queryUrl = `${baseUrl}?BusStopCode=${startdestination}&ServiceNo=${selectbus}`;
+  // const config = {
+  //   headers: {
+  //     AccountKey: process.env.REACT_APP_API_KEY,
+  //     accept: "application/json",
+  //   },
+  // };
+  // axios
+  //   .get(queryUrl, config)
+  //   .then((response) => {
+  //     setbusarrivalinfo(response.data.data.Services);
+  //     // console.log(busarrivalinfo);
+  //   })
+  //   .catch((err) => console.log(err));
+  // };
 
   const axiosCallTemporary = () => {
     let baseUrl = "../database/busArrival.txt";
     axios
       .get(baseUrl)
       .then((response) => {
-        console.log(response.data.data.Services[0]);
-        setbusarrivalinfo(response.data.data.Services[0]);
+        setbusarrivalinfo(response.data.data.Services);
+        // console.log(busarrivalinfo);
       })
       .catch((err) => console.log(err));
   };
-  // console.log(busarrivalinfo);
 
   const updateAlertDistance = (dist) => {
     console.log("CLICKED");
+    console.log(dist);
     setalertdistance(dist);
   };
 
-  const successCallback = (pos) => {
-    setcurrentposcoord({
-      Latitude: pos.coords.latitude,
-      Longitude: pos.coords.longitude,
-    });
-  };
-  const errorCallback = (error) => {
-    console.log(error);
-  };
-  // setInterval(() => {
-  //   navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-  // }, 30000);
-  navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-  console.log("CURRENT POSITION COORDINATE:");
-  console.log(currentposcoord);
-
-  const calculateDistance = () => {
-    let latBus = endstopcoord.Latitude;
-    let longBus = endstopcoord.Longitude;
-    let latPos = currentposcoord.Latitude;
-    let longPos = currentposcoord.Longitude;
-  };
+  // const alertFn = () => {
+  //   if (alertuser) {
+  //     alert("You are reaching your destination.");
+  //     setalertuser(false);
+  //   }
+  // };
 
   return (
     <Router>
@@ -221,16 +248,20 @@ const App = () => {
             <Busarrival busarrivalinfo={busarrivalinfo} />
           </Route>
 
-          <Route path="/distance">
-            <Distance
+          <Route path="/setdistance">
+            <Setdistance
               updateAlertDistance={updateAlertDistance}
               alertdistance={alertdistance}
             />
           </Route>
-
-          <Route path="/arrived">
-            <Arrived />
+          <Route path="/alert">
+            <Alert
+              //
+              alertdistance={alertdistance}
+              endstopcoord={endstopcoord}
+            />
           </Route>
+
           <Route path="/about">
             <About />
           </Route>

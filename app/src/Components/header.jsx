@@ -52,8 +52,13 @@ const Header = () => {
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" to="/distance">
-              distance
+            <NavLink className="nav-link" to="/setdistance">
+              setdistance
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/alert">
+              Alert
             </NavLink>
           </li>
           <li className="nav-item">

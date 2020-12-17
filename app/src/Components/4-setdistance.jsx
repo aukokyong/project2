@@ -4,7 +4,7 @@ import { useState } from "react";
 const Distance = (props) => {
   const [input, setinput] = useState();
 
-  const checkInput = (e) => {
+  const updateinput = (e) => {
     setinput(e.target.value);
   };
 
@@ -13,31 +13,21 @@ const Distance = (props) => {
       <div className="row justify-content-center">
         <div className="col-6" style={{ border: "1px red solid" }}>
           <h2>Set distance to alert</h2>
-          <p>Distance to alert: {props.alertdistance} km</p>
-          <input type="number" onChange={checkInput} />
+          <p>Set distance to alert</p>
+          <input type="number" onChange={updateinput} />
           km
           <br />
           <button
-            onClick={() => {
+            onClick={(e) => {
               props.updateAlertDistance(input);
             }}
           >
-            Set
+            <Link to="/alert">Set</Link>
           </button>
         </div>
       </div>
 
       <br />
-
-      <div className="row justify-content-center">
-        <div className="col-6" style={{ border: "1px red solid" }}>
-          <h2>Distance Left</h2>
-
-          <button>
-            <Link to="/busarrival">Back</Link>
-          </button>
-        </div>
-      </div>
     </div>
   );
 };
