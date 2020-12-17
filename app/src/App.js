@@ -166,40 +166,40 @@ const App = () => {
   const handleFetchBusArrivalInfo = (e) => {
     // console.log("Start", e);
     if (isinputvalid && startdestination !== "" && enddestination !== "") {
-      // axiosCall();
-      axiosCallTemporary();
+      axiosCall();
+      // axiosCallTemporary();
     }
   };
 
-  // const axiosCall = () => {
-  // let baseUrl =
-  //   "http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2";
-  // let queryUrl = `${baseUrl}?BusStopCode=${startdestination}&ServiceNo=${selectbus}`;
-  // const config = {
-  //   headers: {
-  //     AccountKey: process.env.REACT_APP_API_KEY,
-  //     accept: "application/json",
-  //   },
-  // };
-  // axios
-  //   .get(queryUrl, config)
-  //   .then((response) => {
-  //     setbusarrivalinfo(response.data.data.Services);
-  //     // console.log(busarrivalinfo);
-  //   })
-  //   .catch((err) => console.log(err));
-  // };
-
-  const axiosCallTemporary = () => {
-    let baseUrl = "../database/busArrival.txt";
+  const axiosCall = () => {
+    let baseUrl =
+      "http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2";
+    let queryUrl = `${baseUrl}?BusStopCode=${startdestination}&ServiceNo=${selectbus}`;
+    const config = {
+      headers: {
+        AccountKey: process.env.REACT_APP_API_KEY,
+        accept: "application/json",
+      },
+    };
     axios
-      .get(baseUrl)
+      .get(queryUrl, config)
       .then((response) => {
         setbusarrivalinfo(response.data.data.Services);
         // console.log(busarrivalinfo);
       })
       .catch((err) => console.log(err));
   };
+
+  // const axiosCallTemporary = () => {
+  //   let baseUrl = "../database/busArrival.txt";
+  //   axios
+  //     .get(baseUrl)
+  //     .then((response) => {
+  //       setbusarrivalinfo(response.data.data.Services);
+  //       // console.log(busarrivalinfo);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
   const updateAlertDistance = (dist) => {
     console.log("CLICKED");
